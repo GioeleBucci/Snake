@@ -18,3 +18,6 @@ void changePoint2D(Point2D *old, Point2D new) {
     old->yRow = new.yRow;
 }
 
+bool isSamePoint2D(Point2D a, Point2D b){
+    return (a.xCol == b.xCol && a.yRow == b.yRow);
+}

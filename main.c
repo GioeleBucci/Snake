@@ -3,13 +3,14 @@
 #include <assert.h>
 #include <conio.h>
 #include <ctype.h>
+#include <windows.h>
 
 #include "snake.h"
 #include "stack.h"
 #include "points2D.h"
 
-#define SNAKE_STARTING_SIZE 3
-
+#define SNAKE_STARTING_SIZE 7
+#define FPS 5
 // ------------------------------------------------------------------------------------------------ //
 
 void debugPosition(char *name, Point2D pos) {
@@ -29,8 +30,9 @@ void moveSnake(Game *game) {
 }
 
 Point2D getInputs() {
-    //the program shouldn't wait for input instead it should continue
-    int input = tolower(getch());
+    int input;
+    if(kbhit())
+        input = tolower(getch()); //kbhit() is a non-blocking input function
     Point2D dir = currentDirection;
     if (input == 'w') dir = newPoint2D(-1, 0);
     if (input == 'a') dir = newPoint2D(0, -1);
@@ -53,6 +55,7 @@ int main() {
 
     while (1) {
         getInputs();
+        Sleep(1000 / FPS);
         refresh(*myGame);
     }
     refresh(*myGame);

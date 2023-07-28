@@ -2,7 +2,7 @@
 #define SNAKEGAME_STACK_H
 
 typedef struct Stack {
-    struct Tile *stack;
+    struct Tile *stack; //stack[0] is the snake's head
     int topElem, size;
 } Stack;
 

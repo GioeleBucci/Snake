@@ -4,8 +4,8 @@
 #include "points2D.h"
 #include "stack.h"
 
-#define WIDTH 30
-#define HEIGHT 5
+#define WIDTH 40
+#define HEIGHT 20
 
 enum type {
     AIR, WALL, HEAD, TAIL, FRUIT
@@ -19,12 +19,12 @@ typedef struct Tile {
 
 typedef struct Game {
     Tile tiles[HEIGHT][WIDTH];
-    Tile *fruit;
 } Game;
 
 extern struct Point2D currentDirection; // where the snake is currently going
 extern Stack stack;
 extern Game *myGame;
+extern Tile *fruit;
 
 void moveSnakeRec(int index, struct Point2D newHeadPos);
 
@@ -34,9 +34,11 @@ void changeTileType(Tile *tile, int newType);
 
 void refresh(Game game);
 
-void gameInit(Game **game);
+void gameInit(Game **gamePtr);
 
 void generateFruit(Game *game);
+
+bool isEatingFruit();
 
 /// Deletes the fruit and increases the snake lenght by 1.
 void eatFruit(Game *game);

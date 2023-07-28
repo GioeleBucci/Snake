@@ -12,6 +12,7 @@
 struct Point2D currentDirection = {0, -1}; // where the snake is currently going
 Stack stack;
 Game *myGame;
+Tile *fruit;
 
 void moveSnakeRec(int index, Point2D newHeadPos) {
     if (index == stack.topElem + 1) {
@@ -21,14 +22,42 @@ void moveSnakeRec(int index, Point2D newHeadPos) {
     changePoint2D(&stack.stack[index].position, newHeadPos);
 }
 
+bool isGameOver(Game *game) {
+
+    //check if the head went into a wall
+    Point2D snakeHead = stack.stack[0].position;
+    if (game->tiles[snakeHead.yRow][snakeHead.xCol].type == WALL)
+        return true;
+
+    //check if the head went into a tail segment
+    for (int i = 1; i < stack.topElem + 1; ++i) {
+        if (isSamePoint2D(snakeHead, stack.stack[i].position))
+            return true;
+    }
+    return false;
+}
+
+
 void refresh(Game game) {
     system("cls");
+
+    if(isGameOver(&game)){
+        puts("Game Over");
+        exit(EXIT_SUCCESS);
+    }
+
+    //check fruit
+    if(isEatingFruit())
+        eatFruit(myGame);
+
+    //move the snake in the current direction
     Point2D newHeadPos = sumPoint2D(stack.stack[0].position, currentDirection);
     moveSnakeRec(0, newHeadPos);
+
     for (int i = 0; i < stack.topElem + 1; ++i) {
         int y = stack.stack[i].position.yRow;
         int x = stack.stack[i].position.xCol;
-        changeTileType(&game.tiles[y][x],stack.stack[i].type);
+        changeTileType(&game.tiles[y][x], stack.stack[i].type);
     }
 
     for (int i = 0; i < HEIGHT; ++i) {
@@ -42,6 +71,7 @@ void refresh(Game game) {
 void gameInit(Game **gamePtr) {
     *gamePtr = malloc(sizeof(Game));
     Game *game = *gamePtr; //just renaming it for code clarity
+
     assert(game != NULL);
     for (int i = 0; i < HEIGHT; ++i) {
         for (int j = 0; j < WIDTH; ++j) {
@@ -52,18 +82,18 @@ void gameInit(Game **gamePtr) {
     for (int i = 1; i < HEIGHT - 1; ++i)
         for (int j = 1; j < WIDTH - 1; ++j)
             changeTileType(&game->tiles[i][j], AIR);
+    fruit = malloc(sizeof(Tile));
+    assert(fruit != NULL);
     generateFruit(game);
 }
 
 void generateFruit(Game *game) {
+    // Get the current time
+    time_t currentTime;
+    time(&currentTime);
 
-    if (game->fruit != NULL) return;
-
-    Tile *fruit = malloc(sizeof(Tile));
-    assert(fruit != NULL);
-
-    game->fruit = fruit;
-    srand(time(NULL));
+    // Seed the random number generator with the current time
+    srand((unsigned int)currentTime);
 
     int xGen, yGen;
     do {
@@ -74,20 +104,15 @@ void generateFruit(Game *game) {
     changeTilePosition(fruit, yGen, xGen);
     changeTileType(fruit, FRUIT);
 
-    int x = fruit->position.xCol, y = fruit->position.yRow;
-    changeTileType(&game->tiles[y][x], FRUIT);
+    changeTileType(&game->tiles[yGen][xGen],FRUIT);
 }
 
 void eatFruit(Game *game) {
 
-    Tile *fruit = game->fruit;
-    assert(fruit != NULL);
-
     int y = fruit->position.yRow, x = fruit->position.xCol;
     changeTileType(&game->tiles[y][x], AIR);
 
-    game->fruit = NULL;
-    free(fruit);
+    generateFruit(game);
 
     // Create a new snake segment to increase its lenght
     Tile *newSnakeSegment = malloc(sizeof(Tile));
@@ -110,4 +135,10 @@ void changeTileType(Tile *tile, int newType) {
     if (newType == HEAD) tile->render = '@';
     if (newType == TAIL) tile->render = 'O';
     if (newType == FRUIT) tile->render = 'F';
+}
+
+bool isEatingFruit() {
+    if(isSamePoint2D(fruit->position,stack.stack[0].position))
+        return true;
+    return false;
 }
