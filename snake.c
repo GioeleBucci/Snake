@@ -1,18 +1,21 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <assert.h>
-#include <stdbool.h>
-#include <conio.h>
-#include <time.h>
 #include "snake.h"
+#include "stack.h"
 
-Point2D currentDirection = {-1,0}; // where the snake is currently going
+Point2D currentDirection = {0, -1}; // where the snake is currently going
+Stack stack;
 
-void refresh(const Game *game) {
+void refresh(Game game) {
     system("cls");
+
+    for (int i = 0; i < stack.topElem + 1; ++i) {
+        int y = stack.stack[i].position.yRow;
+        int x = stack.stack[i].position.xCol;
+        changeTileType(&game.tiles[y][x],stack.stack[i].type);
+    }
+
     for (int i = 0; i < HEIGHT; ++i) {
         for (int j = 0; j < WIDTH; ++j) {
-            printf("%c", game->tiles[i][j].render);
+            printf("%c", game.tiles[i][j].render);
         }
         printf("\n");
     }
@@ -24,13 +27,13 @@ void gameInit(Game **gamePtr) {
     assert(game != NULL);
     for (int i = 0; i < HEIGHT; ++i) {
         for (int j = 0; j < WIDTH; ++j) {
-            changeTileType(&game->tiles[i][j],WALL);
-            changeTilePosition(&game->tiles[i][j],i,j);
+            changeTileType(&game->tiles[i][j], WALL);
+            changeTilePosition(&game->tiles[i][j], i, j);
         }
     }
     for (int i = 1; i < HEIGHT - 1; ++i)
         for (int j = 1; j < WIDTH - 1; ++j)
-            changeTileType(&game->tiles[i][j],AIR);
+            changeTileType(&game->tiles[i][j], AIR);
 }
 
 void generateFruit(Game *game) {
@@ -49,11 +52,11 @@ void generateFruit(Game *game) {
         yGen = rand() % HEIGHT;
     } while (game->tiles[yGen][xGen].type != AIR);
 
-    changeTilePosition(fruit,yGen,xGen);
-    changeTileType(fruit,FRUIT);
+    changeTilePosition(fruit, yGen, xGen);
+    changeTileType(fruit, FRUIT);
 
     int x = fruit->position.xCol, y = fruit->position.yRow;
-    changeTileType(&game->tiles[y][x],FRUIT);
+    changeTileType(&game->tiles[y][x], FRUIT);
 }
 
 void eatFruit(Game *game) {
@@ -62,10 +65,18 @@ void eatFruit(Game *game) {
     assert(fruit != NULL);
 
     int y = fruit->position.yRow, x = fruit->position.xCol;
-    changeTileType(&game->tiles[y][x],AIR);
+    changeTileType(&game->tiles[y][x], AIR);
 
     game->fruit = NULL;
     free(fruit);
+
+    // Create a new snake segment to increase its lenght
+    Tile *newSnakeSegment = malloc(sizeof(Tile));
+    assert(newSnakeSegment != NULL);
+    newSnakeSegment->position = stack.stack[stack.topElem].position;
+    newSnakeSegment->position.xCol -= currentDirection.xCol;
+    newSnakeSegment->position.yRow -= currentDirection.yRow;
+    push(*newSnakeSegment,game);
 }
 
 void changeDirection(Point2D newDir, Game *game) {

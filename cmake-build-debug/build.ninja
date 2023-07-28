@@ -61,6 +61,12 @@ build CMakeFiles/SnakeGame.dir/snake.c.obj: C_COMPILER__SnakeGame_Debug C$:/User
   OBJECT_DIR = CMakeFiles\SnakeGame.dir
   OBJECT_FILE_DIR = CMakeFiles\SnakeGame.dir
 
+build CMakeFiles/SnakeGame.dir/stack.c.obj: C_COMPILER__SnakeGame_Debug C$:/Users/gioel/CLionProjects/SnakeGame/stack.c || cmake_object_order_depends_target_SnakeGame
+  DEP_FILE = CMakeFiles\SnakeGame.dir\stack.c.obj.d
+  FLAGS = -g
+  OBJECT_DIR = CMakeFiles\SnakeGame.dir
+  OBJECT_FILE_DIR = CMakeFiles\SnakeGame.dir
+
 
 # =============================================================================
 # Link build statements for EXECUTABLE target SnakeGame
@@ -69,7 +75,7 @@ build CMakeFiles/SnakeGame.dir/snake.c.obj: C_COMPILER__SnakeGame_Debug C$:/User
 #############################################
 # Link the executable SnakeGame.exe
 
-build SnakeGame.exe: C_EXECUTABLE_LINKER__SnakeGame_Debug CMakeFiles/SnakeGame.dir/main.c.obj CMakeFiles/SnakeGame.dir/snake.c.obj
+build SnakeGame.exe: C_EXECUTABLE_LINKER__SnakeGame_Debug CMakeFiles/SnakeGame.dir/main.c.obj CMakeFiles/SnakeGame.dir/snake.c.obj CMakeFiles/SnakeGame.dir/stack.c.obj
   FLAGS = -g
   LINK_LIBRARIES = -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32
   OBJECT_DIR = CMakeFiles\SnakeGame.dir
