@@ -9,8 +9,8 @@
 #include "stack.h"
 #include "points2D.h"
 
-#define SNAKE_STARTING_SIZE 7
-#define FPS 5
+#define SNAKE_STARTING_SIZE 3
+#define FPS 30
 // ------------------------------------------------------------------------------------------------ //
 
 void clearScreen() {
@@ -27,18 +27,8 @@ void clearScreen() {
 
     dwConSize = csbi.dwSize.X * csbi.dwSize.Y;
 
-    // Fill the entire screen with spaces.
-    if (!FillConsoleOutputCharacter(hConsole, (TCHAR)' ', dwConSize, coordScreen, &cCharsWritten)) {
-        return;
-    }
-
-    // Get the current text attribute.
-    if (!GetConsoleScreenBufferInfo(hConsole, &csbi)) {
-        return;
-    }
-
-    // Set the buffer's attributes accordingly.
-    if (!FillConsoleOutputAttribute(hConsole, csbi.wAttributes, dwConSize, coordScreen, &cCharsWritten)) {
+    // Scroll the console buffer up to clear the screen.
+    if (!ScrollConsoleScreenBuffer(hConsole, &csbi.srWindow, NULL, coordScreen, &csbi.srWindow)) {
         return;
     }
 
@@ -64,7 +54,7 @@ void moveSnake(Game *game) {
 
 Point2D getInputs() {
     int input;
-    if(kbhit())
+    if (kbhit())
         input = tolower(getch()); //kbhit() is a non-blocking input function
     Point2D dir = currentDirection;
     if (input == 'w') dir = newPoint2D(-1, 0);
@@ -73,7 +63,7 @@ Point2D getInputs() {
     if (input == 'd') dir = newPoint2D(0, 1);
 
     //avoid changing to opposite direction
-    if(currentDirection.xCol == -dir.xCol && currentDirection.yRow == -dir.yRow)
+    if (currentDirection.xCol == -dir.xCol && currentDirection.yRow == -dir.yRow)
         return currentDirection;
 
     currentDirection = dir;

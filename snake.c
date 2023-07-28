@@ -13,6 +13,14 @@ struct Point2D currentDirection = {0, -1}; // where the snake is currently going
 Stack stack;
 Game *myGame;
 Tile *fruit;
+int score = 0;
+
+void printScore() {
+    for (int i = 0; i < WIDTH - 10; ++i) {
+        printf(" ");
+    }
+    printf("SCORE: %03d\n", score);
+}
 
 void moveSnakeRec(int index, Point2D newHeadPos) {
     if (index == stack.topElem + 1) {
@@ -23,7 +31,6 @@ void moveSnakeRec(int index, Point2D newHeadPos) {
 }
 
 bool isGameOver(Game *game) {
-
     //check if the head went into a wall
     Point2D snakeHead = stack.stack[0].position;
     if (game->tiles[snakeHead.yRow][snakeHead.xCol].type == WALL)
@@ -39,15 +46,18 @@ bool isGameOver(Game *game) {
 
 
 void refresh(Game game) {
-    //system("cls");
 
-    if(isGameOver(&game)){
+    if (isGameOver(&game)) {
         puts("Game Over");
         exit(EXIT_SUCCESS);
     }
 
+    //system("cls");
+
+    printScore();
+
     //check fruit
-    if(isEatingFruit())
+    if (isEatingFruit())
         eatFruit(myGame);
 
     //move the snake in the current direction
@@ -82,6 +92,8 @@ void gameInit(Game **gamePtr) {
     for (int i = 1; i < HEIGHT - 1; ++i)
         for (int j = 1; j < WIDTH - 1; ++j)
             changeTileType(&game->tiles[i][j], AIR);
+
+    //allocate memory for fruit object and generate it
     fruit = malloc(sizeof(Tile));
     assert(fruit != NULL);
     generateFruit(game);
@@ -93,7 +105,7 @@ void generateFruit(Game *game) {
     time(&currentTime);
 
     // Seed the random number generator with the current time
-    srand((unsigned int)currentTime);
+    srand((unsigned int) currentTime);
 
     int xGen, yGen;
     do {
@@ -104,10 +116,11 @@ void generateFruit(Game *game) {
     changeTilePosition(fruit, yGen, xGen);
     changeTileType(fruit, FRUIT);
 
-    changeTileType(&game->tiles[yGen][xGen],FRUIT);
+    changeTileType(&game->tiles[yGen][xGen], FRUIT);
 }
 
 void eatFruit(Game *game) {
+    score++;
 
     int y = fruit->position.yRow, x = fruit->position.xCol;
     changeTileType(&game->tiles[y][x], AIR);
@@ -138,7 +151,7 @@ void changeTileType(Tile *tile, int newType) {
 }
 
 bool isEatingFruit() {
-    if(isSamePoint2D(fruit->position,stack.stack[0].position))
+    if (isSamePoint2D(fruit->position, stack.stack[0].position))
         return true;
     return false;
 }

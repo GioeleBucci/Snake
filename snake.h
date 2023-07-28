@@ -25,6 +25,9 @@ extern struct Point2D currentDirection; // where the snake is currently going
 extern Stack stack;
 extern Game *myGame;
 extern Tile *fruit;
+extern int score;
+
+void printScore();
 
 void moveSnakeRec(int index, struct Point2D newHeadPos);
 
