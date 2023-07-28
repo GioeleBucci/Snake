@@ -15,6 +15,34 @@ void push(struct Tile elem, Game *game);
 
 Tile *pop(Game *game);
 
+void debugPosition(char *name, Point2D pos) {
+    printf("\n%s: %d row %d col", name, pos.yRow, pos.xCol);
+}
+
+void changePosition(Point2D *old, Point2D new) {
+    old->xCol = new.xCol;
+    old->yRow = new.yRow;
+}
+
+Point2D sumPoint2D(Point2D a, Point2D b) {
+    Point2D res;
+    res.xCol = a.xCol + b.xCol;
+    res.yRow = a.yRow + b.yRow;
+    return res;
+}
+
+/// must be called once per frame. Moves the snake in the current direction
+void moveSnake(Game *game) {
+    for (int i = stack.topElem; i > 0; --i) {
+        changePosition(&stack.stack[i].position, stack.stack[i - 1].position);
+        debugPosition("e", stack.stack[i].position);
+    }
+    //move head
+    Point2D newHeadPos = sumPoint2D(stack.stack[0].position, currentDirection);
+    changePosition(&stack.stack[0].position, newHeadPos);
+    debugPosition("Head", stack.stack[0].position);
+}
+
 int main() {
     stackInit(5);
     gameInit(&myGame);
@@ -29,13 +57,14 @@ int main() {
     refresh(myGame);
     //eatFruit(myGame);
 
+    moveSnake(myGame);
     int input = getch();
     int dir = -1;
     if (input == 'w') dir = UP;
     if (input == 'a') dir = LEFT;
     if (input == 's') dir = DOWN;
     if (input == 'd') dir = RIGHT;
-    if (dir != -1) changeDirection(dir,myGame);
+    //if (dir != -1) changeDirection(dir,myGame);
 }
 
 void stackInit(int size) {
@@ -65,19 +94,17 @@ void push(struct Tile elem, Game *game) {
 
     //if head was generated add it to snakeHead field
     if (stack.topElem == -1) game->snakeHead = &elem;
-
     stack.topElem++;
     stack.stack[stack.topElem] = elem;
 }
 
 /// Returns top element or null if stack is empty
 Tile *pop(Game *game) {
-
     if (stack.topElem == -1) return NULL;
     Tile *elem = &(stack.stack[stack.topElem]);
 
     //put air where the tile was
-    changeTileType(&game->tiles[elem->position.xCol][elem->position.yRow],AIR);
+    changeTileType(&game->tiles[elem->position.xCol][elem->position.yRow], AIR);
 
     stack.topElem--;
     return elem;

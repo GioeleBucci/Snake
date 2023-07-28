@@ -33,6 +33,8 @@ typedef struct Stack {
     int topElem, size;
 } Stack;
 
+extern Point2D currentDirection; // where the snake is currently going
+
 void changeTilePosition(Tile *tile, int yRow, int xCol);
 
 void changeTileType(Tile *tile, int newType);
@@ -45,8 +47,6 @@ void generateFruit(Game *game);
 
 void eatFruit(Game *game);
 
-void changeDirection(int newDir, Game *game);
-
-void update(Game *game);
+void changeDirection(Point2D newDir, Game *game);
 
 #endif //SNAKEGAME_SNAKE_H

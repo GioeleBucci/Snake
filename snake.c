@@ -6,7 +6,7 @@
 #include <time.h>
 #include "snake.h"
 
-int currentDirection = LEFT; // where the snake is currently going
+Point2D currentDirection = {-1,0}; // where the snake is currently going
 
 void refresh(const Game *game) {
     system("cls");
@@ -68,22 +68,9 @@ void eatFruit(Game *game) {
     free(fruit);
 }
 
-void changeDirection(int newDir, Game *game) {
-    if (newDir == currentDirection) return;
+void changeDirection(Point2D newDir, Game *game) {
+    if (newDir.xCol == currentDirection.xCol && newDir.yRow == currentDirection.yRow) return;
     else currentDirection = newDir;
-}
-
-void update(Game *game) {
-    switch (currentDirection) {
-        case UP:
-            break;
-        case DOWN:
-            break;
-        case LEFT:
-            break;
-        case RIGHT:
-            break;
-    }
 }
 
 void changeTilePosition(Tile *tile, int yRow, int xCol) {
