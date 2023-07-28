@@ -13,6 +13,39 @@
 #define FPS 5
 // ------------------------------------------------------------------------------------------------ //
 
+void clearScreen() {
+    HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+    COORD coordScreen = { 0, 0 };
+    DWORD cCharsWritten;
+    CONSOLE_SCREEN_BUFFER_INFO csbi;
+    DWORD dwConSize;
+
+    // Get the number of character cells in the current buffer.
+    if (!GetConsoleScreenBufferInfo(hConsole, &csbi)) {
+        return;
+    }
+
+    dwConSize = csbi.dwSize.X * csbi.dwSize.Y;
+
+    // Fill the entire screen with spaces.
+    if (!FillConsoleOutputCharacter(hConsole, (TCHAR)' ', dwConSize, coordScreen, &cCharsWritten)) {
+        return;
+    }
+
+    // Get the current text attribute.
+    if (!GetConsoleScreenBufferInfo(hConsole, &csbi)) {
+        return;
+    }
+
+    // Set the buffer's attributes accordingly.
+    if (!FillConsoleOutputAttribute(hConsole, csbi.wAttributes, dwConSize, coordScreen, &cCharsWritten)) {
+        return;
+    }
+
+    // Put the cursor at its home coordinates.
+    SetConsoleCursorPosition(hConsole, coordScreen);
+}
+
 void debugPosition(char *name, Point2D pos) {
     printf("\n%s: %d row %d col", name, pos.yRow, pos.xCol);
 }
@@ -38,11 +71,16 @@ Point2D getInputs() {
     if (input == 'a') dir = newPoint2D(0, -1);
     if (input == 's') dir = newPoint2D(1, 0);
     if (input == 'd') dir = newPoint2D(0, 1);
+
+    //avoid changing to opposite direction
+    if(currentDirection.xCol == -dir.xCol && currentDirection.yRow == -dir.yRow)
+        return currentDirection;
+
     currentDirection = dir;
 }
 
 int main() {
-    stackInit(5);
+    stackInit(100);
     gameInit(&myGame);
 
     //generates the snake (put into gameInit maybe?)
@@ -56,6 +94,7 @@ int main() {
     while (1) {
         getInputs();
         Sleep(1000 / FPS);
+        clearScreen();
         refresh(*myGame);
     }
     refresh(*myGame);

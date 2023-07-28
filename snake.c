@@ -39,7 +39,7 @@ bool isGameOver(Game *game) {
 
 
 void refresh(Game game) {
-    system("cls");
+    //system("cls");
 
     if(isGameOver(&game)){
         puts("Game Over");
@@ -132,9 +132,9 @@ void changeTileType(Tile *tile, int newType) {
     tile->type = newType;
     if (newType == AIR) tile->render = ' ';
     if (newType == WALL) tile->render = 219;
-    if (newType == HEAD) tile->render = '@';
-    if (newType == TAIL) tile->render = 'O';
-    if (newType == FRUIT) tile->render = 'F';
+    if (newType == HEAD) tile->render = 219;
+    if (newType == TAIL) tile->render = 219;
+    if (newType == FRUIT) tile->render = '@';
 }
 
 bool isEatingFruit() {
