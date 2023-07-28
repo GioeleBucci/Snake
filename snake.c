@@ -1,12 +1,29 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <assert.h>
+#include <stdbool.h>
+#include <conio.h>
+#include <time.h>
 #include "snake.h"
+#include "points2D.h"
 #include "stack.h"
 
-Point2D currentDirection = {0, -1}; // where the snake is currently going
+struct Point2D currentDirection = {0, -1}; // where the snake is currently going
 Stack stack;
+Game *myGame;
+
+void moveSnakeRec(int index, Point2D newHeadPos) {
+    if (index == stack.topElem + 1) {
+        return;
+    }
+    moveSnakeRec(index + 1, stack.stack[index].position);
+    changePoint2D(&stack.stack[index].position, newHeadPos);
+}
 
 void refresh(Game game) {
     system("cls");
-
+    Point2D newHeadPos = sumPoint2D(stack.stack[0].position, currentDirection);
+    moveSnakeRec(0, newHeadPos);
     for (int i = 0; i < stack.topElem + 1; ++i) {
         int y = stack.stack[i].position.yRow;
         int x = stack.stack[i].position.xCol;
@@ -34,6 +51,7 @@ void gameInit(Game **gamePtr) {
     for (int i = 1; i < HEIGHT - 1; ++i)
         for (int j = 1; j < WIDTH - 1; ++j)
             changeTileType(&game->tiles[i][j], AIR);
+    generateFruit(game);
 }
 
 void generateFruit(Game *game) {
@@ -76,12 +94,7 @@ void eatFruit(Game *game) {
     newSnakeSegment->position = stack.stack[stack.topElem].position;
     newSnakeSegment->position.xCol -= currentDirection.xCol;
     newSnakeSegment->position.yRow -= currentDirection.yRow;
-    push(*newSnakeSegment,game);
-}
-
-void changeDirection(Point2D newDir, Game *game) {
-    if (newDir.xCol == currentDirection.xCol && newDir.yRow == currentDirection.yRow) return;
-    else currentDirection = newDir;
+    push(*newSnakeSegment);
 }
 
 void changeTilePosition(Tile *tile, int yRow, int xCol) {

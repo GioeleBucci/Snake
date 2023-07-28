@@ -1,6 +1,7 @@
-#include "stack.h"
 #include <assert.h>
 #include <stdlib.h>
+#include "stack.h"
+#include "snake.h"
 
 void stackInit(int size) {
     stack.stack = malloc(sizeof(struct Tile) * size);
@@ -11,7 +12,7 @@ void stackInit(int size) {
 
 /// Handles snake segments.
 /// If the stack is empty the first segment pushed will become the head, tail otherwise
-void push(struct Tile elem, Game *game) {
+void push(struct Tile elem) {
 
     if (stack.topElem == stack.size - 1) {
         stack.stack = realloc(stack.stack, sizeof(struct Tile) * stack.size + 10);
@@ -28,12 +29,9 @@ void push(struct Tile elem, Game *game) {
 }
 
 /// Returns top element or null if stack is empty
-Tile *pop(Game *game) {
+struct Tile *pop() {
     if (stack.topElem == -1) return NULL;
     Tile *elem = &(stack.stack[stack.topElem]);
-
-    //put air where the tile was
-    changeTileType(&game->tiles[elem->position.xCol][elem->position.yRow], AIR);
 
     stack.topElem--;
     return elem;

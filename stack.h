@@ -3,10 +3,15 @@
 
 #include "snake.h"
 
+typedef struct Stack {
+    struct Tile *stack;
+    int topElem, size;
+} Stack;
+
 void stackInit(int size);
 
-void push(struct Tile elem, Game *game);
+void push(struct Tile elem);
 
-Tile *pop(Game *game);
+struct Tile *pop();
 
 #endif //SNAKEGAME_STACK_H

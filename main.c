@@ -2,10 +2,13 @@
 #include <stdlib.h>
 #include <assert.h>
 #include <conio.h>
+#include <ctype.h>
+
 #include "snake.h"
 #include "stack.h"
+#include "points2D.h"
 
-Game *myGame;
+#define SNAKE_STARTING_SIZE 3
 
 // ------------------------------------------------------------------------------------------------ //
 
@@ -13,62 +16,53 @@ void debugPosition(char *name, Point2D pos) {
     printf("\n%s: %d row %d col", name, pos.yRow, pos.xCol);
 }
 
-void changePosition(Point2D *old, Point2D new) {
-    old->xCol = new.xCol;
-    old->yRow = new.yRow;
-}
-
-Point2D sumPoint2D(Point2D a, Point2D b) {
-    Point2D res;
-    res.xCol = a.xCol + b.xCol;
-    res.yRow = a.yRow + b.yRow;
-    return res;
-}
-
 /// must be called once per frame. Moves the snake in the current direction
 void moveSnake(Game *game) {
     for (int i = stack.topElem; i > 0; --i) {
-        changePosition(&stack.stack[i].position, stack.stack[i - 1].position);
+        changePoint2D(&stack.stack[i].position, stack.stack[i - 1].position);
         debugPosition("e", stack.stack[i].position);
     }
     //move head
     Point2D newHeadPos = sumPoint2D(stack.stack[0].position, currentDirection);
-    changePosition(&stack.stack[0].position, newHeadPos);
+    changePoint2D(&stack.stack[0].position, newHeadPos);
     debugPosition("Head", stack.stack[0].position);
 }
 
-void moveSnakeRec(int index, Point2D newHeadPos){
-    if(index == stack.topElem + 1)
-        return;
-    moveSnakeRec(index+1,stack.stack[index].position);
-    changePosition(&stack.stack[index].position,newHeadPos);
+Point2D getInputs() {
+    //the program shouldn't wait for input instead it should continue
+    int input = tolower(getch());
+    Point2D dir = currentDirection;
+    if (input == 'w') dir = newPoint2D(-1, 0);
+    if (input == 'a') dir = newPoint2D(0, -1);
+    if (input == 's') dir = newPoint2D(1, 0);
+    if (input == 'd') dir = newPoint2D(0, 1);
+    currentDirection = dir;
 }
-
 
 int main() {
     stackInit(5);
     gameInit(&myGame);
 
-    Tile tile1;
-    tile1.position.yRow = 1, tile1.position.xCol = 1;
-    for (int i = 0; i < 5; ++i) {
-        push(tile1, myGame);
-        tile1.position.xCol++;
+    //generates the snake (put into gameInit maybe?)
+    Tile segment;
+    segment.position.yRow = HEIGHT / 2, segment.position.xCol = WIDTH / 2;
+    for (int i = 0; i < SNAKE_STARTING_SIZE; ++i) {
+        push(segment);
+        segment.position.xCol++;
     }
-    generateFruit(myGame);
+
+    while (1) {
+        getInputs();
+        refresh(*myGame);
+    }
+
     refresh(*myGame);
     eatFruit(myGame);
+    refresh(*myGame);
     getch();
     //moveSnake(myGame);
     Point2D newHeadPos = sumPoint2D(stack.stack[0].position, currentDirection);
-    moveSnakeRec(0,newHeadPos);
-    exit(1);
+    moveSnakeRec(0, newHeadPos);
     refresh(*myGame);
-    int input = getch();
-    int dir = -1;
-    if (input == 'w') dir = UP;
-    if (input == 'a') dir = LEFT;
-    if (input == 's') dir = DOWN;
-    if (input == 'd') dir = RIGHT;
-    //if (dir != -1) changeDirection(dir,myGame);
+
 }

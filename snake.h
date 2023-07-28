@@ -8,6 +8,7 @@
 #include <conio.h>
 #include <time.h>
 #include "snake.h"
+#include "stack.h"
 
 #define WIDTH 30
 #define HEIGHT 5
@@ -15,14 +16,6 @@
 enum type {
     AIR, WALL, HEAD, TAIL, FRUIT
 };
-
-enum direction {
-    UP, DOWN, LEFT, RIGHT
-};
-
-typedef struct Point2D {
-    int yRow, xCol;
-} Point2D;
 
 typedef struct Tile {
     Point2D position;
@@ -35,13 +28,11 @@ typedef struct Game {
     Tile *fruit;
 } Game;
 
-typedef struct Stack {
-    struct Tile *stack;
-    int topElem, size;
-} Stack;
-
-extern Point2D currentDirection; // where the snake is currently going
+extern struct Point2D currentDirection; // where the snake is currently going
 extern Stack stack;
+extern Game *myGame;
+
+void moveSnakeRec(int index, struct Point2D newHeadPos);
 
 void changeTilePosition(Tile *tile, int yRow, int xCol);
 
@@ -55,7 +46,5 @@ void generateFruit(Game *game);
 
 /// Deletes the fruit and increases the snake lenght by 1.
 void eatFruit(Game *game);
-
-void changeDirection(Point2D newDir, Game *game);
 
 #endif //SNAKEGAME_SNAKE_H
