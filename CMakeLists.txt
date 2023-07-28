@@ -3,4 +3,4 @@ project(SnakeGame C)
 
 set(CMAKE_C_STANDARD 17)
 
-add_executable(SnakeGame main.c)
+add_executable(SnakeGame main.c snake.h snake.c)
