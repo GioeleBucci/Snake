@@ -1,8 +1,6 @@
 #ifndef SNAKEGAME_STACK_H
 #define SNAKEGAME_STACK_H
 
-#include "snake.h"
-
 typedef struct Stack {
     struct Tile *stack;
     int topElem, size;

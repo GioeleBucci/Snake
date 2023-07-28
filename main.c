@@ -55,7 +55,6 @@ int main() {
         getInputs();
         refresh(*myGame);
     }
-
     refresh(*myGame);
     eatFruit(myGame);
     refresh(*myGame);

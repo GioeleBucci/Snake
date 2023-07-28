@@ -4,6 +4,7 @@
 #include <stdbool.h>
 #include <conio.h>
 #include <time.h>
+
 #include "snake.h"
 #include "points2D.h"
 #include "stack.h"

@@ -1,13 +1,7 @@
 #ifndef SNAKEGAME_SNAKE_H
 #define SNAKEGAME_SNAKE_H
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <assert.h>
-#include <stdbool.h>
-#include <conio.h>
-#include <time.h>
-#include "snake.h"
+#include "points2D.h"
 #include "stack.h"
 
 #define WIDTH 30
@@ -18,7 +12,7 @@ enum type {
 };
 
 typedef struct Tile {
-    Point2D position;
+    struct Point2D position;
     unsigned char render;
     int type;
 } Tile;
