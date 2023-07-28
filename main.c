@@ -15,10 +15,18 @@
 
 void clearScreen() {
     HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+    CONSOLE_CURSOR_INFO cursorInfo;
     COORD coordScreen = { 0, 0 };
     DWORD cCharsWritten;
     CONSOLE_SCREEN_BUFFER_INFO csbi;
     DWORD dwConSize;
+
+    // Get the current cursor info and save it
+    GetConsoleCursorInfo(hConsole, &cursorInfo);
+
+    // Hide the cursor by setting its size to zero
+    cursorInfo.dwSize = 100; // Set a large value to hide the cursor
+    SetConsoleCursorInfo(hConsole, &cursorInfo);
 
     // Get the number of character cells in the current buffer.
     if (!GetConsoleScreenBufferInfo(hConsole, &csbi)) {
@@ -34,6 +42,10 @@ void clearScreen() {
 
     // Put the cursor at its home coordinates.
     SetConsoleCursorPosition(hConsole, coordScreen);
+
+    // Show the cursor again by restoring its original size
+    cursorInfo.dwSize = 1; // Set the cursor size to its original value
+    SetConsoleCursorInfo(hConsole, &cursorInfo);
 }
 
 void debugPosition(char *name, Point2D pos) {
@@ -68,6 +80,9 @@ Point2D getInputs() {
 
     currentDirection = dir;
 }
+
+
+
 
 int main() {
     stackInit(100);
