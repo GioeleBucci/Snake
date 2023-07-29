@@ -15,4 +15,6 @@ void changePoint2D(Point2D *old, Point2D new);
 
 bool isSamePoint2D(Point2D a, Point2D b);
 
+void nullPoint2D(Point2D *point2D);
+
 #endif

@@ -4,6 +4,7 @@
 #include <conio.h>
 #include <ctype.h>
 #include <windows.h>
+#include <math.h>
 
 #include "snake.h"
 #include "stack.h"
@@ -81,9 +82,6 @@ Point2D getInputs() {
     currentDirection = dir;
 }
 
-
-
-
 int main() {
     stackInit(100);
     gameInit(&myGame);
@@ -95,12 +93,13 @@ int main() {
         push(segment);
         segment.position.xCol++;
     }
-
+    system("cls");
     while (1) {
         getInputs();
         Sleep(1000 / FPS);
         clearScreen();
         refresh(*myGame);
+        printf("%03d",manhattanDistance());
     }
     refresh(*myGame);
     eatFruit(myGame);

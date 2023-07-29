@@ -21,3 +21,8 @@ void changePoint2D(Point2D *old, Point2D new) {
 bool isSamePoint2D(Point2D a, Point2D b){
     return (a.xCol == b.xCol && a.yRow == b.yRow);
 }
+
+void nullPoint2D(Point2D *point2D){
+    point2D->xCol = 0;
+    point2D->yRow = 0;
+}

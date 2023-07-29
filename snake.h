@@ -27,6 +27,8 @@ extern Game *myGame;
 extern Tile *fruit;
 extern int score;
 
+bool isGameOver(Game *game);
+
 void printScore();
 
 void moveSnakeRec(int index, struct Point2D newHeadPos);

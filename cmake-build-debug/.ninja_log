@@ -1,12 +1,10 @@
 # ninja log v5
-3	920	7122624869041899	CMakeFiles/SnakeGame.dir/main.c.obj	7452ae2a19338932
-921	1021	7122624870021909	SnakeGame.exe	1ac68dfbcac59fc6
-12	109	7122617662966000	CMakeFiles/SnakeGame.dir/snake.c.obj	dd94425ad95b2d9e
+7	2008	7122786361128925	CMakeFiles/SnakeGame.dir/main.c.obj	7452ae2a19338932
+2009	2279	7122786363453385	SnakeGame.exe	1ac68dfbcac59fc6
+21	251	7122784702940486	CMakeFiles/SnakeGame.dir/snake.c.obj	dd94425ad95b2d9e
 18	112	7122616934269454	CMakeFiles/SnakeGame.dir/stack.c.obj	ebe164673ff9014d
 44	268	7122568808296626	CMakeFiles/SnakeGame.dir/points2D.c.obj	1d0bc3e86dcc66d6
-3	819	7122625442853842	CMakeFiles/SnakeGame.dir/main.c.obj	7452ae2a19338932
-821	919	7122625443870047	SnakeGame.exe	1ac68dfbcac59fc6
-3	1196	7122626931850313	CMakeFiles/SnakeGame.dir/main.c.obj	7452ae2a19338932
-1196	1327	7122626933120991	SnakeGame.exe	1ac68dfbcac59fc6
-2	932	7122628878404383	CMakeFiles/SnakeGame.dir/main.c.obj	7452ae2a19338932
-933	1045	7122628879478317	SnakeGame.exe	1ac68dfbcac59fc6
+20	197	7122788232825968	CMakeFiles/SnakeGame.dir/snakeAI.c.obj	755f77c5086faeec
+8	1870	7122788249583675	CMakeFiles/SnakeGame.dir/main.c.obj	7452ae2a19338932
+1870	2099	7122788251763033	SnakeGame.exe	d794f9e260b97736
+6	194	7122794984877485	CMakeFiles/SnakeGame.dir/points2D.c.obj	1d0bc3e86dcc66d6
