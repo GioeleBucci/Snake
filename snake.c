@@ -52,6 +52,7 @@ void refresh(Game game) {
         exit(EXIT_SUCCESS);
     }
 
+    //getch(); //uncomment this when debugging
     //system("cls");
 
     printScore();
@@ -133,7 +134,7 @@ void eatFruit(Game *game) {
     newSnakeSegment->position = stack.stack[stack.topElem].position;
     newSnakeSegment->position.xCol -= currentDirection.xCol;
     newSnakeSegment->position.yRow -= currentDirection.yRow;
-    push(*newSnakeSegment);
+    push(*newSnakeSegment, &stack);
 }
 
 void changeTilePosition(Tile *tile, int yRow, int xCol) {

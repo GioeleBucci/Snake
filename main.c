@@ -9,9 +9,11 @@
 #include "snake.h"
 #include "stack.h"
 #include "points2D.h"
+#include "snakeAI.h"
 
 #define SNAKE_STARTING_SIZE 3
 #define FPS 30
+
 // ------------------------------------------------------------------------------------------------ //
 
 void clearScreen() {
@@ -83,23 +85,42 @@ Point2D getInputs() {
 }
 
 int main() {
-    stackInit(100);
+    stackInit(100, &stack);
     gameInit(&myGame);
 
     //generates the snake (put into gameInit maybe?)
     Tile segment;
     segment.position.yRow = HEIGHT / 2, segment.position.xCol = WIDTH / 2;
     for (int i = 0; i < SNAKE_STARTING_SIZE; ++i) {
-        push(segment);
+        push(segment, &stack);
         segment.position.xCol++;
     }
+
+    ///////////////////////////////////////////////////
+    system("cls");
+    while (1){
+        search(5,*myGame,currentDirection);
+        Sleep(1000 / FPS);
+        currentDirection = bestMove;
+        clearScreen();
+        refresh(*myGame);
+        //Game gameClone = *myGame;
+        //printf("Best: %d %d",bestMove.yRow,bestMove.xCol);
+        //printf("\ny%d x%d",currentDirection.yRow,currentDirection.xCol);
+        //Point2D newHeadPos = sumPoint2D(stack.stack[0].position, currentDirection);
+        //moveSnakeRec(0, newHeadPos);
+        //refresh(*myGame);
+    }
+
+    ///////////////////////////////////////////////////
+
     system("cls");
     while (1) {
         getInputs();
         Sleep(1000 / FPS);
         clearScreen();
         refresh(*myGame);
-        printf("%03d",manhattanDistance());
+        //printf("%03d",manhattanDistance(head));
     }
     refresh(*myGame);
     eatFruit(myGame);

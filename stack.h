@@ -6,9 +6,9 @@ typedef struct Stack {
     int topElem, size;
 } Stack;
 
-void stackInit(int size);
+void stackInit(int size, Stack *stackPtr);
 
-void push(struct Tile elem);
+void push(struct Tile elem, Stack *stackPtr);
 
 struct Tile *pop();
 
