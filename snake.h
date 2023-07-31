@@ -48,4 +48,6 @@ bool isEatingFruit();
 /// Deletes the fruit and increases the snake lenght by 1.
 void eatFruit(Game *game);
 
+void clearScreen();
+
 #endif //SNAKEGAME_SNAKE_H

@@ -4,6 +4,7 @@
 #include <stdbool.h>
 #include <conio.h>
 #include <time.h>
+#include <windows.h>
 
 #include "snake.h"
 #include "points2D.h"
@@ -48,7 +49,11 @@ bool isGameOver(Game *game) {
 void refresh(Game game) {
 
     if (isGameOver(&game)) {
-        puts("Game Over");
+        for (int i = 0; i < HEIGHT; ++i)
+            printf("\n");
+        puts("\n\nGame Over.\nPress any key to exit");
+        fflush(stdin);
+        getch();
         exit(EXIT_SUCCESS);
     }
 
@@ -93,6 +98,14 @@ void gameInit(Game **gamePtr) {
     for (int i = 1; i < HEIGHT - 1; ++i)
         for (int j = 1; j < WIDTH - 1; ++j)
             changeTileType(&game->tiles[i][j], AIR);
+
+    //generates the snake
+    Tile segment;
+    segment.position.yRow = HEIGHT / 2, segment.position.xCol = WIDTH / 2;
+    for (int i = 0; i < 3; ++i) { //3 is the snake starting size
+        push(segment, &stack);
+        segment.position.xCol++;
+    }
 
     //allocate memory for fruit object and generate it
     fruit = malloc(sizeof(Tile));
@@ -155,4 +168,40 @@ bool isEatingFruit() {
     if (isSamePoint2D(fruit->position, stack.stack[0].position))
         return true;
     return false;
+}
+
+/// Better alternative to cls: clears screen without flickering TODO FIX
+void clearScreen() {
+    HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+    CONSOLE_CURSOR_INFO cursorInfo;
+    COORD coordScreen = {0, 0};
+    DWORD cCharsWritten;
+    CONSOLE_SCREEN_BUFFER_INFO csbi;
+    DWORD dwConSize;
+
+    // Get the current cursor info and save it
+    GetConsoleCursorInfo(hConsole, &cursorInfo);
+
+    // Hide the cursor by setting its size to zero
+    cursorInfo.dwSize = 100; // Set a large value to hide the cursor
+    SetConsoleCursorInfo(hConsole, &cursorInfo);
+
+    // Get the number of character cells in the current buffer.
+    if (!GetConsoleScreenBufferInfo(hConsole, &csbi)) {
+        return;
+    }
+
+    dwConSize = csbi.dwSize.X * csbi.dwSize.Y;
+
+    // Scroll the console buffer up to clear the screen.
+    if (!ScrollConsoleScreenBuffer(hConsole, &csbi.srWindow, NULL, coordScreen, &csbi.srWindow)) {
+        return;
+    }
+
+    // Put the cursor at its home coordinates.
+    SetConsoleCursorPosition(hConsole, coordScreen);
+
+    // Show the cursor again by restoring its original size
+    cursorInfo.dwSize = 1; // Set the cursor size to its original value
+    SetConsoleCursorInfo(hConsole, &cursorInfo);
 }
